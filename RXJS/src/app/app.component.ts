@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscriber } from 'rxjs';
+import { observable, Observable, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -40,11 +40,21 @@ export class AppComponent implements OnInit {
     //   .then(result => console.log(result))
     //   .catch(erro => console.log(erro));
 
-    this.minhaObservable('Thiago')
-      .subscribe(
-        result => console.log(result),
-        error => console.error(error)
-      );
+    // this.minhaObservable('Thiago')
+    //   .subscribe(
+    //     result => console.log(result),
+    //     error => console.error(error),
+    //     () => console.log('Fim!') 
+    //   );
+
+    const observer = {
+      next: valor => console.log('next: ' + valor),
+      error: error => console.error('error: ' + error),
+      complete: () => console.log('complete: Fim!')
+    }
+
+    const obs = this.minhaObservable('Thiago');
+    obs.subscribe(observer);
 
   }
 
@@ -68,7 +78,8 @@ export class AppComponent implements OnInit {
         subscriber.next('Olá de novo ' + nome);
         setTimeout(() => {
           subscriber.next(`Seja bem vindo ${nome}`)
-        }, 1000);
+        }, 5000);
+        subscriber.complete();
       } else {
         subscriber.error('Ops! Você não é o Thiago!');
       }
