@@ -48,13 +48,21 @@ export class AppComponent implements OnInit {
     //   );
 
     const observer = {
-      next: valor => console.log('next: ' + valor),
-      error: error => console.error('error: ' + error),
+      next: valor => console.log('next: ', valor),
+      error: error => console.error('error: ', error),
       complete: () => console.log('complete: Fim!')
     }
 
-    const obs = this.minhaObservable('Thiago');
-    obs.subscribe(observer);
+    // const obs = this.minhaObservable('Thiago');
+    // obs.subscribe(observer);
+
+    const obs = this.usuarioObservable('Admin', 'admin@email.com');
+    const subs = obs.subscribe(observer);
+
+    setTimeout(() => {
+      subs.unsubscribe();
+      console.log('Conexão fechada: ' + subs.closed);
+    }, 3500)
 
   }
 
@@ -86,5 +94,41 @@ export class AppComponent implements OnInit {
     });
   }
 
+  usuarioObservable(nome: string, email: string): Observable<Usuario> {
+    return new Observable(subscriber => {
+      if (nome === 'Admin') {
+        let usuario = new Usuario(nome, email);
+        
+        setTimeout(() => {
+          subscriber.next(usuario);
+        }, 1000);
+        setTimeout(() => {
+          subscriber.next(usuario);
+        }, 2000);
+        setTimeout(() => {
+          subscriber.next(usuario);
+        }, 3000);
+        setTimeout(() => {
+          subscriber.next(usuario);
+        }, 4000);
+        setTimeout(() => {
+          subscriber.complete();
+        }, 5000);
+      } else {
+        subscriber.error('Ops! Você não é usuário Admin');
+      }
+    });
+  }
+}
+
+export class Usuario {
+
+  nome: string;
+  email: string;
+
+  constructor(nome: string, email: string) {
+    this.nome = nome;
+    this.email = email;
+  }
 
 }
