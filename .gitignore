@@ -1,0 +1,4 @@
+# Ignorando arquivos de exemplo do projeto
+Exemplos/
+# Ignorando modulos do node
+node_modules/
